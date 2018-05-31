@@ -1,3 +1,4 @@
+require("dotenv").config();
 var fs = require('fs');
 var argOne = process.argv[2];
 var argTwo = process.argv[3];
@@ -6,21 +7,16 @@ var request = require('request');
 // twitter
 var keys = require('./keys.js');
 var Twitter = require('twitter');
-var client = new Twitter({
-      consumer_key: process.env.k2shSd1oK4LGW5xMIf1tNQ0eE,
-      consumer_secret: process.env.SxBBLuR4wtlxw6jjT21POy3QrU89e3X3dbABwOAN1llIuf6KJP,
-      access_token_key: process.env.y7mq4TghA8OA6VdVFS4z7VpdjezjtB,
-      access_token_secret: process.env.HzIzlRonr5XkPasWtCu05WaDfNFH5tKbe0jS4plYiH6tY
-    
-    //  consumer_key: keys.twitterKeys.consumer_key,
-    //  consumer_secret: keys.twitterKeys.consumer_secret,
-    //  access_token_key: keys.twitterKeys.access_token_key,
-    //  access_token_secret: keys.twitterKeys.access_token_secret
-});
+var client = new Twitter(keys.twitter);
 var params = {count: 20};
 
 // spotify
-var spotify = require('node-spotify-api');
+var Spotify = require('node-spotify-api');
+var spotify = new Spotify(keys.spotify);
+
+// // movie
+// var Movie = require('movie-this');
+// var movie = new Movie(key.movie);
 
 function getTweets(){
      client.get('statuses/user_timeline', params, function(error, tweets, response){
@@ -59,7 +55,7 @@ function getMovie() {
      if (argTwo !== undefined) {
           queryInput = argTwo;
      }
-     request('http://www.omdbapi.com/?t=' + queryInput + "&tomatoes=true", function (error, response, body) {
+     request('http://www.omdbapi.com/?t=' + queryInput + "&y=&plot=short&apikey=27cd117f", function (error, response, body) {
           if (!error && response.statusCode == 200) {
                var movieData = JSON.parse(body);
                console.log("Title: " + movieData.Title);
